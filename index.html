@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>双语金句素材库 · Phrase Deck</title>
+<meta name="description" content="36 条中英双语短句，按 10 个话题带整理，每条附语法拆解与内容钩子。纯静态，零依赖。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💬</text></svg>">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <h1>双语金句素材库</h1>
+      <p class="sub">Phrase Deck · <span id="stat-count">0</span> 条双语短句 · 10 个话题带</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn" id="btn-random" title="随机抽一条">🎲 随机</button>
+      <button type="button" class="btn" id="btn-theme" title="切换深色 / 浅色">🌗</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="toolbar" aria-label="筛选与导出">
+    <div class="search-row">
+      <input type="search" id="search" class="search" placeholder="搜索英文 / 中文 / 关键词 …（按 / 聚焦）"
+             autocomplete="off" aria-label="搜索素材">
+      <button type="button" class="btn btn-ghost" id="btn-clear" hidden>清空</button>
+    </div>
+
+    <div class="chips" id="band-chips" role="group" aria-label="按话题带筛选"></div>
+
+    <div class="export-row">
+      <span class="result-hint" id="result-hint"></span>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="btn-json">导出 JSON</button>
+      <button type="button" class="btn" id="btn-csv">导出 CSV</button>
+      <button type="button" class="btn" id="btn-print">打印 / PDF</button>
+    </div>
+  </section>
+
+  <section id="cards" class="cards" aria-live="polite"></section>
+
+  <p class="empty" id="empty" hidden>没有匹配的素材，换个关键词试试。</p>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>
+      数据源只有 <code>data/phrases.js</code> 一个文件；<code>tools/build.py</code> 可再导出
+      JSON / CSV / 可打印 HTML / Word。
+    </p>
+    <p class="muted">
+      条目内容仅供语言学习与内容创作参考 · MIT License ·
+      <a href="https://github.com/" id="repo-link">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="data/phrases.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

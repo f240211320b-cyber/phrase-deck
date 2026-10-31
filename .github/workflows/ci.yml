@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: 校验数据 + 构建产物
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 单元测试
+        run: python tools/test_build.py
+
+      - name: 校验数据
+        run: python tools/build.py --check
+
+      - name: 构建 dist
+        run: python tools/build.py --out dist
+
+      - name: 检查产物
+        run: |
+          ls -lh dist
+          test -f "dist/双语金句素材库.docx"
+          test -f "dist/双语金句素材库.html"
+          test -f "dist/phrases.json"
+          test -f "dist/phrases.csv"
