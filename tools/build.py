@@ -443,6 +443,21 @@ def write_docx(data: dict, out_dir: Path) -> Path:
 # 主流程
 # --------------------------------------------------------------------------
 
+def _display(path: Path) -> str:
+    """尽量显示相对路径（仓库根 → 当前目录 → 绝对路径）。
+
+    --out 允许传相对路径，此时 path.relative_to(ROOT) 会抛 ValueError，
+    所以这里逐级回退，保证任何工作目录下都不炸。
+    """
+    resolved = Path(path).resolve()
+    for base in (ROOT, Path.cwd()):
+        try:
+            return resolved.relative_to(Path(base).resolve()).as_posix()
+        except ValueError:
+            continue
+    return resolved.as_posix()
+
+
 def build(out_dir: Path = DEFAULT_OUT, check_only: bool = False) -> dict:
     data = load_data()
     errors = validate(data)
@@ -452,6 +467,7 @@ def build(out_dir: Path = DEFAULT_OUT, check_only: bool = False) -> dict:
     if check_only:
         return {"items": len(data["items"]), "bands": len(data["bands"])}
 
+    out_dir = Path(out_dir).expanduser().resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
     outputs = [
         write_json(data, out_dir),
@@ -467,6 +483,12 @@ def build(out_dir: Path = DEFAULT_OUT, check_only: bool = False) -> dict:
 
 
 def main(argv: list[str] | None = None) -> int:
+    # Windows 下 stdout 重定向到管道时默认用 GBK，遇到非 GBK 字符会直接崩，
+    # 这里放宽为「替换不可编码字符」，保证 CLI 在任何终端/CI 下都能安全打印。
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
     parser = argparse.ArgumentParser(description="校验数据并导出 JSON / CSV / HTML / DOCX")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT, help="输出目录，默认 dist/")
     parser.add_argument("--check", action="store_true", help="只校验数据，不生成文件")
@@ -478,10 +500,10 @@ def main(argv: list[str] | None = None) -> int:
         print(str(exc), file=sys.stderr)
         return 1
 
-    print(f"✓ 校验通过：{result['items']} 条素材 / {result['bands']} 个话题带")
+    print(f"校验通过：{result['items']} 条素材 / {result['bands']} 个话题带")
     for path in result.get("outputs", []):
         size = path.stat().st_size
-        print(f"  · {path.relative_to(ROOT)}  ({size:,} 字节)")
+        print(f"  · {_display(path)}  ({size:,} 字节)")
     return 0
 
 

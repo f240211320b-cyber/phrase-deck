@@ -12,6 +12,7 @@ import copy
 import csv
 import io
 import json
+import os
 import shutil
 import sys
 import unittest
@@ -166,6 +167,16 @@ class CliTests(unittest.TestCase):
             self.assertEqual(build.main(["--out", str(tmp)]), 1)
         finally:
             build.load_data = original
+            shutil.rmtree(TMP_ROOT, ignore_errors=True)
+
+    def test_relative_out_dir_works(self) -> None:
+        """--out 传相对路径时必须能正常构建并打印（曾在 CI 上 ValueError）。"""
+        cwd = os.getcwd()
+        try:
+            os.chdir(build.ROOT)
+            self.assertEqual(build.main(["--out", ".tmp-test/rel-out"]), 0)
+        finally:
+            os.chdir(cwd)
             shutil.rmtree(TMP_ROOT, ignore_errors=True)
 
 
