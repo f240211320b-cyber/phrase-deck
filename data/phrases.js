@@ -9,7 +9,8 @@ window.PHRASES = {
     "titleEn": "Phrase Deck",
     "description": "36 条中英双语短句，按 10 个话题带整理，每条附语法拆解与内容钩子。",
     "version": "1.0.0",
-    "license": "MIT"
+    "license": "MIT",
+    "repo": "https://github.com/f240211320b-cyber/phrase-deck"
   },
   "bands": [
     {

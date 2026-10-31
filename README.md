@@ -3,8 +3,11 @@
 > 36 条中英双语短句，按 10 个话题带整理，每条附**语法拆解**与**内容钩子**。
 > 纯静态网页 + 零依赖 Python 构建脚本 —— 双击就能看，不装任何东西。
 
+**🌐 在线访问：<https://f240211320b-cyber.github.io/phrase-deck/>**
+
 ![页面预览](docs/preview.png)
 
+[![在线站点](https://img.shields.io/badge/在线访问-GitHub%20Pages-2ea44f)](https://f240211320b-cyber.github.io/phrase-deck/)
 [![CI](https://github.com/f240211320b-cyber/phrase-deck/actions/workflows/ci.yml/badge.svg)](https://github.com/f240211320b-cyber/phrase-deck/actions/workflows/ci.yml)
 [![Deploy](https://github.com/f240211320b-cyber/phrase-deck/actions/workflows/pages.yml/badge.svg)](https://github.com/f240211320b-cyber/phrase-deck/actions/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -86,7 +89,7 @@ phrase-deck/
 │  └─ phrases.js              唯一数据源：window.PHRASES = { meta, bands, items }
 ├─ tools/
 │  ├─ build.py                校验 + 导出 JSON / CSV / HTML / DOCX
-│  └─ test_build.py           标准库 unittest，18 个用例
+│  └─ test_build.py           标准库 unittest，19 个用例
 ├─ .github/workflows/
 │  ├─ ci.yml                  测试 + 构建校验
 │  └─ pages.yml               发布到 GitHub Pages
@@ -139,20 +142,22 @@ window.PHRASES = {
 
 ## 部署到 GitHub Pages
 
-仓库推上去之后，在 **Settings → Pages → Build and deployment** 里把
-**Source** 选成 **GitHub Actions**。之后每次 push 到 `main`，
-`.github/workflows/pages.yml` 会自动把整站发布到：
+本项目已经启用 Pages，线上地址：
 
 ```
-https://<你的用户名>.github.io/<仓库名>/
+https://f240211320b-cyber.github.io/phrase-deck/
 ```
 
-不需要构建步骤 —— Pages 直接拿仓库根目录的静态文件。
+发布由 `.github/workflows/pages.yml` 完成：每次 push 到 `main`，它把仓库根目录的
+静态文件打包发布（Pages `build_type=workflow`，不需要任何构建步骤）。
+
+自己 fork 之后要开启的话：在 **Settings → Pages → Build and deployment** 里把
+**Source** 选成 **GitHub Actions** 即可。
 
 ## 开发
 
 ```bash
-python tools/test_build.py      # 18 个用例：数据校验 / 各格式产物 / CLI
+python tools/test_build.py      # 19 个用例：数据校验 / 各格式产物 / CLI
 python tools/build.py --check   # CI 里跑的同一套校验
 ```
 
@@ -192,7 +197,7 @@ bands, each with a grammar breakdown and a content hook.
 - **Build script** — `python tools/build.py` validates the data and exports
   JSON, CSV, a printable HTML page and a real `.docx` (hand-written OOXML via
   the standard library, no `python-docx`).
-- **Tests** — `python tools/test_build.py` (stdlib `unittest`, 18 cases).
+- **Tests** — `python tools/test_build.py` (stdlib `unittest`, 19 cases).
 - **CI/CD** — GitHub Actions runs the tests on every push and deploys the site
   to GitHub Pages from `main`.
 
